@@ -77,15 +77,16 @@ func (r *repository) UpdateStudent(ctx context.Context, student entity.Student) 
 	return updatedID, nil
 }
 
-func (r *repository) GetStudentById(ctx context.Context, studentId int) (entity.Student, error) {
+func (r *repository) GetStudentByCreds(ctx context.Context, phone, password string) (entity.Student, error) {
+
 	query := `
         SELECT id, name, email, phone, password, created_at, updated_at 
         FROM students 
-        WHERE id = $1
+        WHERE phone = $1 AND password = $2
     `
 
 	var student entity.Student
-	err := r.db.QueryRowContext(ctx, query, studentId).Scan(
+	err := r.db.QueryRowContext(ctx, query, phone, password).Scan(
 		&student.ID,
 		&student.Name,
 		&student.Email,

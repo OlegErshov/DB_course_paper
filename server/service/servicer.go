@@ -9,7 +9,8 @@ type StudentService interface {
 	CreateStudent(ctx context.Context, student entity.Student) (int, error)
 	DeleteStudent(ctx context.Context, studentId int) error
 	UpdateStudent(ctx context.Context, student entity.Student) (int, error)
-	GetStudentById(ctx context.Context, studentId int) (entity.Student, error)
+	GetStudentByCreds(ctx context.Context, phone, password string) (int, error)
+	LogOutUser(ctx context.Context, userId int) error
 
 	GetStudentTopics(ctx context.Context, studentId int) ([]entity.Topic, error)
 }
@@ -18,9 +19,19 @@ type TeacherService interface {
 	CreateTeacher(ctx context.Context, teacher entity.Teacher) (int, error)
 	DeleteTeacher(ctx context.Context, teacherId int) error
 	UpdateTeacher(ctx context.Context, student entity.Student) (int, error)
+	GetTeacherByCreds(ctx context.Context, phone, password string) (int, error)
 	GetStudents(ctx context.Context, teacherId int) ([]entity.Student, error)
 
 	GetTeacherTopics(ctx context.Context, teacherId int) ([]entity.Topic, error)
+}
+
+type TokenService interface {
+	CreateTokens(ctx context.Context, token entity.Token) (int, error)
+	DeleteTokens(ctx context.Context, tokenId int) error
+	UpdateTokens(ctx context.Context, token entity.Token) (int, error)
+	GetTokens(ctx context.Context, tokenId int) (entity.Token, error)
+
+	LogOutUser(ctx context.Context, userId int) error
 }
 
 type GrammarService interface {
@@ -57,4 +68,5 @@ type Servicer interface {
 	VocabluaryService
 	TopicService
 	AssignService
+	TokenService
 }

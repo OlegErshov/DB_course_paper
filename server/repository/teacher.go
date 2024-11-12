@@ -140,3 +140,29 @@ func (r *repository) GetTeacherTopics(ctx context.Context, teacherId int) ([]ent
 
 	return topics, nil
 }
+
+func (r repository) GetTeacherByCreds(ctx context.Context, phone, password string) (entity.Teacher, error) {
+	var teacher entity.Teacher
+	query := `SELECT id, name, email, phone, password, created_at, updated_at 
+              FROM teachers 
+              WHERE phone = $1 AND password = $2`
+
+	err := r.db.QueryRowContext(ctx, query, phone, password).Scan(
+		&teacher.ID,
+		&teacher.Name,
+		&teacher.Email,
+		&teacher.Phone,
+		&teacher.Password,
+		&teacher.CreatedAt,
+		&teacher.UpdatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return entity.Teacher{}, nil // Teacher not found
+		}
+		return entity.Teacher{}, err // Database error
+	}
+
+	return teacher, nil
+}

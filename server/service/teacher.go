@@ -44,3 +44,11 @@ func (s service) GetTeacherTopics(ctx context.Context, teacherId int) ([]entity.
 	}
 	return topics, nil
 }
+
+func (s service) GetTeacherByCreds(ctx context.Context, phone, password string) (int, error) {
+	teacher, err := s.r.GetTeacherByCreds(ctx, phone, password)
+	if err != nil {
+		return 0, err
+	}
+	return teacher.ID, nil
+}

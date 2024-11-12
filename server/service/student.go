@@ -29,12 +29,12 @@ func (s service) UpdateStudent(ctx context.Context, student entity.Student) (int
 	return studentId, nil
 }
 
-func (s service) GetStudentById(ctx context.Context, studentId int) (entity.Student, error) {
-	student, err := s.r.GetStudentById(ctx, studentId)
+func (s service) GetStudentByCreds(ctx context.Context, phone, password string) (int, error) {
+	student, err := s.r.GetStudentByCreds(ctx, phone, password)
 	if err != nil {
-		return entity.Student{}, err
+		return 0, err
 	}
-	return student, nil
+	return student.ID, nil
 }
 
 func (s service) GetStudentTopics(ctx context.Context, studentId int) ([]entity.Topic, error) {
