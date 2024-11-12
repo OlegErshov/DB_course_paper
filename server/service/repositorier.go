@@ -17,7 +17,7 @@ type StudentRepository interface {
 type TeacherRepository interface {
 	CreateTeacher(ctx context.Context, teacher entity.Teacher) (int, error)
 	DeleteTeacher(ctx context.Context, teacherId int) error
-	UpdateTeacher(ctx context.Context, student entity.Student) (int, error)
+	UpdateTeacher(ctx context.Context, teacher entity.Teacher) (int, error)
 	GetStudents(ctx context.Context, teacherId int) ([]entity.Student, error)
 
 	GetTeacherTopics(ctx context.Context, teacherId int) ([]entity.Topic, error)
@@ -59,4 +59,10 @@ type AssignRepository interface {
 
 type Repositorier interface {
 	StudentRepository
+	TeacherRepository
+	TokenRepository
+	GrammarRepository
+	VocabluaryRepository
+	TopicRepository
+	AssignRepository
 }
