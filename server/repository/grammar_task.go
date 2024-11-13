@@ -6,7 +6,7 @@ import (
 	"database/sql"
 )
 
-func (r *repository) CreateGrammarTask(ctx context.Context, task entity.GrammarTask) (int, error) {
+func (r repository) CreateGrammarTask(ctx context.Context, task entity.GrammarTask) (int, error) {
 	query := `
         INSERT INTO grammar_task (sentence, right_answer, hint, explanation)
         VALUES ($1, $2, $3, $4)
@@ -28,7 +28,7 @@ func (r *repository) CreateGrammarTask(ctx context.Context, task entity.GrammarT
 	return id, nil
 }
 
-func (r *repository) DeleteGrammarTask(ctx context.Context, taskId int) error {
+func (r repository) DeleteGrammarTask(ctx context.Context, taskId int) error {
 	query := `
         DELETE FROM grammar_task 
         WHERE id = $1
@@ -51,7 +51,7 @@ func (r *repository) DeleteGrammarTask(ctx context.Context, taskId int) error {
 	return nil
 }
 
-func (r *repository) GetGrammarTaskById(ctx context.Context, taskId int) (entity.GrammarTask, error) {
+func (r repository) GetGrammarTaskById(ctx context.Context, taskId int) (entity.GrammarTask, error) {
 	query := `
         SELECT id, sentence, right_answer, hint, explanation 
         FROM grammar_task 

@@ -6,7 +6,7 @@ import (
 	"database/sql"
 )
 
-func (r *repository) CreateTopic(ctx context.Context, topic entity.Topic) (int, error) {
+func (r repository) CreateTopic(ctx context.Context, topic entity.Topic) (int, error) {
 	query := `
         INSERT INTO topic (name, mark)
         VALUES ($1, $2)
@@ -26,7 +26,7 @@ func (r *repository) CreateTopic(ctx context.Context, topic entity.Topic) (int, 
 	return id, nil
 }
 
-func (r *repository) DeleteTopic(ctx context.Context, topicId int) error {
+func (r repository) DeleteTopic(ctx context.Context, topicId int) error {
 	query := `
         DELETE FROM topic 
         WHERE id = $1
@@ -49,7 +49,7 @@ func (r *repository) DeleteTopic(ctx context.Context, topicId int) error {
 	return nil
 }
 
-func (r *repository) GetTopicById(ctx context.Context, topicId int) (entity.Topic, error) {
+func (r repository) GetTopicById(ctx context.Context, topicId int) (entity.Topic, error) {
 	query := `
         SELECT id, name, mark 
         FROM topic 
@@ -72,7 +72,7 @@ func (r *repository) GetTopicById(ctx context.Context, topicId int) (entity.Topi
 	return topic, nil
 }
 
-func (r *repository) UpdateTopic(ctx context.Context, topic entity.Topic) (int, error) {
+func (r repository) UpdateTopic(ctx context.Context, topic entity.Topic) (int, error) {
 	query := `
         UPDATE topic
         SET name = $1, mark = $2

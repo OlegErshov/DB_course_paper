@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (r *repository) CreateTeacher(ctx context.Context, teacher entity.Teacher) (int, error) {
+func (r repository) CreateTeacher(ctx context.Context, teacher entity.Teacher) (int, error) {
 	query := `
         INSERT INTO teachers (name, email, phone, password, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6)
@@ -31,7 +31,7 @@ func (r *repository) CreateTeacher(ctx context.Context, teacher entity.Teacher) 
 	return id, nil
 }
 
-func (r *repository) DeleteTeacher(ctx context.Context, teacherId int) error {
+func (r repository) DeleteTeacher(ctx context.Context, teacherId int) error {
 	query := `
         DELETE FROM teachers 
         WHERE id = $1
@@ -54,7 +54,7 @@ func (r *repository) DeleteTeacher(ctx context.Context, teacherId int) error {
 	return nil
 }
 
-func (r *repository) UpdateTeacher(ctx context.Context, teacher entity.Teacher) (int, error) {
+func (r repository) UpdateTeacher(ctx context.Context, teacher entity.Teacher) (int, error) {
 	query := `
         UPDATE teachers 
         SET name = $1, email = $2, phone = $3, password = $4, updated_at = $5
@@ -79,7 +79,7 @@ func (r *repository) UpdateTeacher(ctx context.Context, teacher entity.Teacher) 
 	return updatedID, nil
 }
 
-func (r *repository) GetStudents(ctx context.Context, teacherId int) ([]entity.Student, error) {
+func (r repository) GetStudents(ctx context.Context, teacherId int) ([]entity.Student, error) {
 	query := `
         SELECT s.id, s.name, s.email, s.phone, s.password, s.created_at, s.updated_at 
         FROM students s
@@ -110,7 +110,7 @@ func (r *repository) GetStudents(ctx context.Context, teacherId int) ([]entity.S
 	return students, nil
 }
 
-func (r *repository) GetTeacherTopics(ctx context.Context, teacherId int) ([]entity.Topic, error) {
+func (r repository) GetTeacherTopics(ctx context.Context, teacherId int) ([]entity.Topic, error) {
 	query := `
         SELECT t.id, t.name, t.mark 
         FROM topic t

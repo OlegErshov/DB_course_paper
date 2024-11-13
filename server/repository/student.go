@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (r *repository) CreateStudent(ctx context.Context, student entity.Student) (int, error) {
+func (r repository) CreateStudent(ctx context.Context, student entity.Student) (int, error) {
 	query := `
         INSERT INTO students (name, email, phone, password)
         VALUES ($1, $2, $3, $4)
@@ -29,7 +29,7 @@ func (r *repository) CreateStudent(ctx context.Context, student entity.Student) 
 	return id, nil
 }
 
-func (r *repository) DeleteStudent(ctx context.Context, studentId int) error {
+func (r repository) DeleteStudent(ctx context.Context, studentId int) error {
 	query := `
         DELETE FROM students 
         WHERE id = $1
@@ -52,7 +52,7 @@ func (r *repository) DeleteStudent(ctx context.Context, studentId int) error {
 	return nil
 }
 
-func (r *repository) UpdateStudent(ctx context.Context, student entity.Student) (int, error) {
+func (r repository) UpdateStudent(ctx context.Context, student entity.Student) (int, error) {
 	query := `
         UPDATE students 
         SET name = $1, email = $2, phone = $3, password = $4, updated_at = $5
@@ -77,7 +77,7 @@ func (r *repository) UpdateStudent(ctx context.Context, student entity.Student) 
 	return updatedID, nil
 }
 
-func (r *repository) GetStudentByCreds(ctx context.Context, phone, password string) (entity.Student, error) {
+func (r repository) GetStudentByCreds(ctx context.Context, phone, password string) (entity.Student, error) {
 
 	query := `
         SELECT id, name, email, phone, password, created_at, updated_at 
@@ -105,7 +105,7 @@ func (r *repository) GetStudentByCreds(ctx context.Context, phone, password stri
 	return student, nil
 }
 
-func (r *repository) GetStudentTopics(ctx context.Context, studentId int) ([]entity.Topic, error) {
+func (r repository) GetStudentTopics(ctx context.Context, studentId int) ([]entity.Topic, error) {
 	query := `
         SELECT t.id, t.name, t.mark 
         FROM topic t

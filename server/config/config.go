@@ -18,13 +18,18 @@ type ServerConfig struct {
 	Port int
 }
 
+type JwtConfig struct {
+	Secret []byte
+}
+
 type Config struct {
 	DB     DBConfig
 	Server ServerConfig
+	Jwt    JwtConfig
 }
 
 func NewConfig() (Config, error) {
-	viper.AddConfigPath("./services/user/cmd")
+	viper.AddConfigPath("./server/cmd/")
 	viper.SetConfigName("config")
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -43,6 +48,9 @@ func NewConfig() (Config, error) {
 		Server: ServerConfig{
 			Host: viper.GetString("server.host"),
 			Port: viper.GetInt("server.port"),
+		},
+		Jwt: JwtConfig{
+			Secret: []byte(viper.GetString("jwt.secret")),
 		},
 	}, nil
 }

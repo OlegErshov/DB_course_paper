@@ -18,7 +18,7 @@ type StudentService interface {
 type TeacherService interface {
 	CreateTeacher(ctx context.Context, teacher entity.Teacher) (int, error)
 	DeleteTeacher(ctx context.Context, teacherId int) error
-	UpdateTeacher(ctx context.Context, student entity.Student) (int, error)
+	UpdateTeacher(ctx context.Context, student entity.Teacher) (int, error)
 	GetTeacherByCreds(ctx context.Context, phone, password string) (int, error)
 	GetStudents(ctx context.Context, teacherId int) ([]entity.Student, error)
 

@@ -4,6 +4,6 @@ type service struct {
 	r Repositorier
 }
 
-func NewService(repo Repositorier) *Servicer {
-	return &service{repo}
+func NewService(repo Repositorier) Servicer {
+	return service{repo}
 }

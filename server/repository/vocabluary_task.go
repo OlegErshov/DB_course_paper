@@ -6,7 +6,7 @@ import (
 	"database/sql"
 )
 
-func (r *repository) CreateOptionsTask(ctx context.Context, task entity.VocabularyOptionsTask) (int, error) {
+func (r repository) CreateOptionsTask(ctx context.Context, task entity.VocabularyOptionsTask) (int, error) {
 	query := `
         INSERT INTO vocabulary_options_task (sentence, answer_options, explanation)
         VALUES ($1, $2, $3)
@@ -27,7 +27,7 @@ func (r *repository) CreateOptionsTask(ctx context.Context, task entity.Vocabula
 	return id, nil
 }
 
-func (r *repository) DeleteOptionsTask(ctx context.Context, taskId int) error {
+func (r repository) DeleteOptionsTask(ctx context.Context, taskId int) error {
 	query := `
         DELETE FROM vocabulary_options_task 
         WHERE id = $1
@@ -50,7 +50,7 @@ func (r *repository) DeleteOptionsTask(ctx context.Context, taskId int) error {
 	return nil
 }
 
-func (r *repository) GetOptionsTaskById(ctx context.Context, taskId int) (entity.VocabularyOptionsTask, error) {
+func (r repository) GetOptionsTaskById(ctx context.Context, taskId int) (entity.VocabularyOptionsTask, error) {
 	query := `
         SELECT id, sentence, answer_options, explanation 
         FROM vocabulary_options_task 
@@ -74,7 +74,7 @@ func (r *repository) GetOptionsTaskById(ctx context.Context, taskId int) (entity
 	return task, nil
 }
 
-func (r *repository) CreateWordTask(ctx context.Context, task entity.VocabularyWordTask) (int, error) {
+func (r repository) CreateWordTask(ctx context.Context, task entity.VocabularyWordTask) (int, error) {
 	query := `
         INSERT INTO vocabulary_word_task (sentence, answer, explanation)
         VALUES ($1, $2, $3)
@@ -95,7 +95,7 @@ func (r *repository) CreateWordTask(ctx context.Context, task entity.VocabularyW
 	return id, nil
 }
 
-func (r *repository) DeleteWordTask(ctx context.Context, taskId int) error {
+func (r repository) DeleteWordTask(ctx context.Context, taskId int) error {
 	query := `
         DELETE FROM vocabulary_word_task 
         WHERE id = $1
@@ -118,7 +118,7 @@ func (r *repository) DeleteWordTask(ctx context.Context, taskId int) error {
 	return nil
 }
 
-func (r *repository) GetWordTaskById(ctx context.Context, taskId int) (entity.VocabularyWordTask, error) {
+func (r repository) GetWordTaskById(ctx context.Context, taskId int) (entity.VocabularyWordTask, error) {
 	query := `
         SELECT id, sentence, answer, explanation 
         FROM vocabulary_word_task 

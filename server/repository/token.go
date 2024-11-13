@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (r *repository) CreateTokens(ctx context.Context, token entity.Token) (int, error) {
+func (r repository) CreateTokens(ctx context.Context, token entity.Token) (int, error) {
 	query := `
         INSERT INTO tokens (user_id, access_token, refresh_token, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5)
@@ -30,7 +30,7 @@ func (r *repository) CreateTokens(ctx context.Context, token entity.Token) (int,
 	return id, nil
 }
 
-func (r *repository) DeleteTokens(ctx context.Context, tokenId int) error {
+func (r repository) DeleteTokens(ctx context.Context, tokenId int) error {
 	query := `
         DELETE FROM tokens 
         WHERE id = $1
@@ -53,7 +53,7 @@ func (r *repository) DeleteTokens(ctx context.Context, tokenId int) error {
 	return nil
 }
 
-func (r *repository) UpdateTokens(ctx context.Context, token entity.Token) (int, error) {
+func (r repository) UpdateTokens(ctx context.Context, token entity.Token) (int, error) {
 	query := `
         UPDATE tokens 
         SET access_token = $1, refresh_token = $2, updated_at = $3
@@ -76,7 +76,7 @@ func (r *repository) UpdateTokens(ctx context.Context, token entity.Token) (int,
 	return updatedID, nil
 }
 
-func (r *repository) GetTokens(ctx context.Context, tokenId int) ([]entity.Token, error) {
+func (r repository) GetTokens(ctx context.Context, tokenId int) (entity.Token, error) {
 	query := `
         SELECT  access_token, refresh_token
         FROM tokens
@@ -85,11 +85,11 @@ func (r *repository) GetTokens(ctx context.Context, tokenId int) ([]entity.Token
 
 	rows, err := r.db.QueryContext(ctx, query, tokenId)
 	if err != nil {
-		return nil, err
+		return entity.Token{}, err
 	}
 	defer rows.Close()
 
-	var tokens []entity.Token
+	var tokens entity.Token
 	for rows.Next() {
 		var token entity.Token
 		err := rows.Scan(
@@ -97,13 +97,14 @@ func (r *repository) GetTokens(ctx context.Context, tokenId int) ([]entity.Token
 			&token.RefreshToken,
 		)
 		if err != nil {
-			return nil, err
+			return entity.Token{}, err
 		}
-		tokens = append(tokens, token)
+		tokens.AccessToken = token.AccessToken
+		tokens.RefreshToken = token.RefreshToken
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return entity.Token{}, err
 	}
 
 	return tokens, nil
