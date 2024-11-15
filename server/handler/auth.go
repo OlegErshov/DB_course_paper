@@ -52,7 +52,21 @@ func (h Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	j, err := json.Marshal(userId)
+	tokens, err := h.createTokens(userId, user.Role)
+	if err != nil {
+		log.Println("SignUp handler error:", err)
+		errorText(c.Writer, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = h.service.CreateTokens(ctx, tokens)
+
+	if err != nil {
+		log.Println("SignUp handler error:", err)
+		errorText(c.Writer, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+	j, err := json.Marshal(tokens)
 	if err != nil {
 		log.Println("SignUp handler error:", err)
 		errorText(c.Writer, "Something went wrong", http.StatusInternalServerError)
@@ -114,14 +128,14 @@ func (h Handler) signIn(c *gin.Context) {
 		}
 	}
 
-	tokens, err := h.createTokens(userId)
+	tokens, err := h.createTokens(userId, input.Role)
 	if err != nil {
 		log.Println("SignIn handler error:", err)
 		errorText(c.Writer, "Something went wrong", http.StatusInternalServerError)
 		return
 	}
 
-	_, err = h.service.CreateTokens(ctx, tokens)
+	_, err = h.service.UpdateTokens(ctx, tokens)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
 			errorText(c.Writer, "time limit exceeded", http.StatusInternalServerError)

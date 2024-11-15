@@ -9,3 +9,11 @@ func (s service) AssignTopicToStudent(ctx context.Context, studentId int, topicI
 	}
 	return nil
 }
+
+func (s service) AssignTaskToTopic(ctx context.Context, taskId int, topicId int) error {
+	err := s.r.AssignTaskToTopic(ctx, topicId, taskId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

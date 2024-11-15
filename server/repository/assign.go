@@ -15,3 +15,17 @@ func (r repository) AssignTopicToStudent(ctx context.Context, studentId int, top
 
 	return nil
 }
+
+func (r repository) AssignTaskToTopic(ctx context.Context, topicId int, taskId int) error {
+	query := `
+        INSERT INTO topic_tasks (task_id, topic_id)
+        VALUES ($1, $2)
+    `
+
+	_, err := r.db.ExecContext(ctx, query, taskId, topicId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

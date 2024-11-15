@@ -85,6 +85,7 @@ type VocabularyOptionsTask struct {
 	ID            int    `json:"id"`
 	Sentence      string `json:"sentence"`
 	AnswerOptions string `json:"answer_options"`
+	RightAnswer   string `json:"right_answer"`
 	Explanation   string `json:"explanation"`
 }
 

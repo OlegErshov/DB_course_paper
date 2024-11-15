@@ -19,8 +19,8 @@ func (r repository) CreateTokens(ctx context.Context, token entity.Token) (int, 
 		token.UserID,
 		token.AccessToken,
 		token.RefreshToken,
-		time.Now(), // created_at
-		time.Now(), // updated_at
+		time.Now(),
+		time.Now(),
 	).Scan(&id)
 
 	if err != nil {
@@ -47,7 +47,7 @@ func (r repository) DeleteTokens(ctx context.Context, tokenId int) error {
 	}
 
 	if rowsAffected == 0 {
-		return sql.ErrNoRows // Ошибка, если токен с указанным ID не найден
+		return sql.ErrNoRows
 	}
 
 	return nil
@@ -57,7 +57,7 @@ func (r repository) UpdateTokens(ctx context.Context, token entity.Token) (int, 
 	query := `
         UPDATE tokens 
         SET access_token = $1, refresh_token = $2, updated_at = $3
-        WHERE id = $4
+        WHERE user_id = $4
         RETURNING id
     `
 
@@ -65,8 +65,8 @@ func (r repository) UpdateTokens(ctx context.Context, token entity.Token) (int, 
 	err := r.db.QueryRowContext(ctx, query,
 		token.AccessToken,
 		token.RefreshToken,
-		time.Now(), // обновляем поле updated_at на текущее время
-		token.ID,   // ID токена, который обновляем
+		time.Now(),
+		token.UserID,
 	).Scan(&updatedID)
 
 	if err != nil {

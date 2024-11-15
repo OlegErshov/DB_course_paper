@@ -5,10 +5,17 @@ CREATE TABLE role (
     name VARCHAR(30)
 );
 
+INSERT INTO role (name) VALUES ('student');
+INSERT INTO role (name) VALUES ('teacher');
+
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
+    role_id INT,
+    real_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
 CREATE TABLE students(
@@ -39,7 +46,6 @@ CREATE TABLE tokens (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
-
 );
 
 CREATE TABLE groups(
@@ -50,10 +56,19 @@ CREATE TABLE groups(
     FOREIGN KEY (teacher_id) REFERENCES teachers(id)
 );
 
+CREATE TABLE task(
+                     id SERIAL PRIMARY KEY,
+                     type VARCHAR(20),
+                     exact_task_id  INT
+    -- в эту таблицу пишется только по тригеру и удаляется только по тригеру. Таблица служит агрегатором для всех типов заданий
+);
+
+
 CREATE TABLE results_journal(
     id SERIAL PRIMARY KEY,
     students_id INT,
-    topic_id INT UNIQUE
+    topic_id INT UNIQUE,
+    FOREIGN KEY (topic_id) REFERENCES task(id)
 );
 
 CREATE TABLE action_journal(
@@ -84,6 +99,7 @@ CREATE TABLE vocabulary_options_task(
     id SERIAL PRIMARY KEY,
     sentence TEXT,
     answer_options TEXT,
+    right_answer TEXT,
     explanation TEXT
 );
 
@@ -101,18 +117,11 @@ CREATE TABLE functional_task(
     explanation TEXT
 );
 
-CREATE TABLE task(
-    id SERIAL PRIMARY KEY,
-    type VARCHAR(20),
-    exact_task_id  INT UNIQUE,
-    FOREIGN KEY (id) REFERENCES results_journal(topic_id)
-    -- в эту таблицу пишется только по тригеру и удаляется только по тригеру. Таблица служит агрегатором для всех типов заданий
-);
-
 CREATE TABLE topic(
     id SERIAL PRIMARY KEY,
     name TEXT,
     mark INT
+                  -- добавить кол-во тасок в топике
 );
 
 CREATE TABLE topic_tasks(
@@ -120,7 +129,7 @@ CREATE TABLE topic_tasks(
     task_id INT,
     topic_id INT,
     FOREIGN KEY (topic_id) REFERENCES topic(id),
-    FOREIGN KEY (task_id) REFERENCES task(exact_task_id)
+    FOREIGN KEY (task_id) REFERENCES task(id)
 );
 
 CREATE TABLE topic_student(

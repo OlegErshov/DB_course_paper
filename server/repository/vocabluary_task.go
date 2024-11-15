@@ -8,8 +8,8 @@ import (
 
 func (r repository) CreateOptionsTask(ctx context.Context, task entity.VocabularyOptionsTask) (int, error) {
 	query := `
-        INSERT INTO vocabulary_options_task (sentence, answer_options, explanation)
-        VALUES ($1, $2, $3)
+        INSERT INTO vocabulary_options_task (sentence, answer_options, right_answer, explanation)
+        VALUES ($1, $2, $3, $4)
         RETURNING id
     `
 
@@ -17,6 +17,7 @@ func (r repository) CreateOptionsTask(ctx context.Context, task entity.Vocabular
 	err := r.db.QueryRowContext(ctx, query,
 		task.Sentence,
 		task.AnswerOptions,
+		task.RightAnswer,
 		task.Explanation,
 	).Scan(&id)
 

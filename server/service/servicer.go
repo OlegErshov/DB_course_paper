@@ -59,6 +59,7 @@ type TopicService interface {
 
 type AssignService interface {
 	AssignTopicToStudent(ctx context.Context, studentId int, topicId int) error
+	AssignTaskToTopic(ctx context.Context, studentId int, taskId int) error
 }
 
 type Servicer interface {

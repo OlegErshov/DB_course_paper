@@ -95,7 +95,7 @@ func (h Handler) processInvalidAccessToken(c *gin.Context, ctx context.Context, 
 		return
 	}
 
-	tokens, err = h.createTokens(userId)
+	tokens, err = h.createTokens(userId, "teacher")
 	if err != nil {
 		log.Println("auth middleware: cannot create token", err)
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
@@ -114,8 +114,9 @@ func (h Handler) processInvalidAccessToken(c *gin.Context, ctx context.Context, 
 }
 
 type Claims struct {
-	Id  string `json:"id"`
-	Exp int64  `json:"exp"`
+	Id   string `json:"id"`
+	Exp  int64  `json:"exp"`
+	Role string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -131,13 +132,25 @@ func (h Handler) GetUserIdFromJwt(token string) (int, error) {
 	return strconv.Atoi(claims.Id)
 }
 
-func (h Handler) createTokens(id int) (entity.Token, error) {
-	accessToken, err := h.createToken(id, accessExpiredInMinutes)
+func (h Handler) GetUserRoleFromJwt(token string) (int, error) {
+	claims := &Claims{}
+
+	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+		return h.jwtSecret, nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	return strconv.Atoi(claims.Role)
+}
+
+func (h Handler) createTokens(id int, role string) (entity.Token, error) {
+	accessToken, err := h.createToken(id, accessExpiredInMinutes, role)
 	if err != nil {
 		return entity.Token{}, err
 	}
 
-	refreshToken, err := h.createToken(id, refreshExpiredInMinutes)
+	refreshToken, err := h.createToken(id, refreshExpiredInMinutes, role)
 	if err != nil {
 		return entity.Token{}, err
 	}
@@ -145,14 +158,16 @@ func (h Handler) createTokens(id int) (entity.Token, error) {
 	return entity.Token{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		UserID:       id,
 	}, nil
 }
 
-func (h Handler) createToken(id, expired int) (string, error) {
+func (h Handler) createToken(id, expired int, role string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"id":  strconv.Itoa(id),
-			"exp": jwt.NewNumericDate(time.Now().Add(time.Duration(expired) * time.Minute)),
+			"id":   strconv.Itoa(id),
+			"role": role,
+			"exp":  jwt.NewNumericDate(time.Now().Add(time.Duration(expired) * time.Minute)),
 		})
 
 	log.Println("jwt secret bytes", h.jwtSecret)

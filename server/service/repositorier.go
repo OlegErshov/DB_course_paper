@@ -56,8 +56,12 @@ type TopicRepository interface {
 	UpdateTopic(ctx context.Context, topic entity.Topic) (int, error)
 }
 
+type TaskRepository interface {
+}
+
 type AssignRepository interface {
 	AssignTopicToStudent(ctx context.Context, studentId int, topicId int) error
+	AssignTaskToTopic(ctx context.Context, topicId int, taskId int) error
 }
 
 type Repositorier interface {
